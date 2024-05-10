@@ -28,4 +28,43 @@ public class Code040_1_NQueen {
         }
         return true;
     }
+
+    public static int f2(int limit, int col, int left, int right) {
+        if (col == limit) {
+            // 所有皇后放完了！
+            return 1;
+        }
+        // 总限制
+        int ban = col | left | right;
+        // ~ban : 1可放皇后，0不能放
+        int candidate = limit & (~ban);
+        // 放置皇后的尝试！
+        int place = 0;
+        // 一共有多少有效的方法
+        int ans = 0;
+        while (candidate != 0) {
+            // 提取出最右侧的1
+            // 0 0 1 1 1 0
+            // 5 4 3 2 1 0
+            // place :
+            // 0 0 0 0 1 0
+            // candidate :
+            // 0 0 1 1 0 0
+            // 5 4 3 2 1 0
+            // place :
+            // 0 0 0 1 0 0
+            // candidate :
+            // 0 0 1 0 0 0
+            // 5 4 3 2 1 0
+            // place :
+            // 0 0 1 0 0 0
+            // candidate :
+            // 0 0 0 0 0 0
+            // 5 4 3 2 1 0
+            place = candidate & (-candidate);
+            candidate ^= place;
+            ans += f2(limit, col | place, (left | place) >> 1, (right | place) << 1);
+        }
+        return ans;
+    }
 }
